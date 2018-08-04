@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import TwitterKit
+//import Twitter
 
 class TweetTableViewCell: UITableViewCell
 {
@@ -23,11 +23,35 @@ class TweetTableViewCell: UITableViewCell
     // as set by this var
     var tweet: Tweet? { didSet { updateUI() } }
     
+    struct Palette {
+        static let hashtagColor = UIColor.blue
+        static let userColor = UIColor.red
+        static let urlColor = UIColor.green
+    }
+    
+    func setTextLabel(tweet: Tweet?)-> NSMutableAttributedString {
+        guard let tweet = tweet else {return NSMutableAttributedString(string: "")}
+        let tweetText = tweet.text
+        let attributedText = NSMutableAttributedString(string: tweetText)
+        
+        attributedText.setMentionsColor(mentions: tweet.hashtags, color: Palette.hashtagColor)
+        attributedText.setMentionsColor(mentions: tweet.urls, color: Palette.urlColor)
+        attributedText.setMentionsColor(mentions: tweet.userMentions, color: Palette.userColor)
+        return attributedText
+    }
+    
+ 
     // whenever our public API tweet is set
     // we just update our outlets using this method
     private func updateUI() {
-        tweetTextLabel?.text = tweet?.text
+   /*    if let tweetT = tweet {
+        let colorText = tweet!.text
+        var atr = NSMutableAttributedString(string: colorText)
+            atr.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.green, range: tweetT.urls.nsrange)
+        }*/
+        tweetTextLabel?.attributedText = setTextLabel(tweet: tweet)
         tweetUserLabel?.text = tweet?.user.description
+    
         
         if let profileImageURL = tweet?.user.profileImageURL {
             // FIXME: blocks main thread
@@ -48,6 +72,14 @@ class TweetTableViewCell: UITableViewCell
             tweetCreatedLabel?.text = formatter.string(from: created)
         } else {
             tweetCreatedLabel?.text = nil
+        }
+    }
+}
+
+private extension NSMutableAttributedString {
+    func setMentionsColor(mentions: [Mention], color: UIColor){
+        for mention in mentions {
+            addAttribute(NSAttributedStringKey.foregroundColor, value: color, range: mention.nsrange)
         }
     }
 }
