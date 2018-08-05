@@ -44,11 +44,6 @@ class TweetTableViewCell: UITableViewCell
     // whenever our public API tweet is set
     // we just update our outlets using this method
     private func updateUI() {
-   /*    if let tweetT = tweet {
-        let colorText = tweet!.text
-        var atr = NSMutableAttributedString(string: colorText)
-            atr.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.green, range: tweetT.urls.nsrange)
-        }*/
         tweetTextLabel?.attributedText = setTextLabel(tweet: tweet)
         tweetUserLabel?.text = tweet?.user.description
     
