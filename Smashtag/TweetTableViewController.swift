@@ -160,4 +160,23 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate
         // твитов из Twitter, если появляются Заголовки Секций
         return "\(tweets.count-section)"
     }
+    
+    private struct Storyboard {
+        static let MentionsIdentifier = "Show Mentions"
+        static let ImagesIdentifier = "Show Images"
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            if identifier == Storyboard.MentionsIdentifier,
+                let mtvc = segue.destination as? MentionTableViewController,
+                let tweetCell = sender as? TweetTableViewCell {
+                mtvc.tweet = tweetCell.tweet
+            }
+        }
+    }
+    
+    
+    
 }
